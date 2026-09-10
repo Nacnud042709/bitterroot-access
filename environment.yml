@@ -1,0 +1,11 @@
+name: bitterroot
+channels:
+  - conda-forge
+dependencies:
+  - gdal
+  - python=3.12
+  - sqlalchemy
+  - geopandas
+  - jupyterlab
+  - psycopg2
+prefix: C:\Users\dunca\miniforge3\envs\bitterroot

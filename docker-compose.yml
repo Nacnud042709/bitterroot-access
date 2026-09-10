@@ -1,0 +1,19 @@
+services:
+  db:
+    build: ./docker
+    container_name: bitterroot-db
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${PGPORT_HOST}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./sql:/sql:ro
+    shm_size: 1gb
+    restart: unless-stopped
+
+volumes:
+  pgdata:

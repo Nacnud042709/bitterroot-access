@@ -1,0 +1,28 @@
+# Data — never commit source data
+data/
+*.gpkg
+*.gdb/
+*.shp
+*.shx
+*.dbf
+*.prj
+*.tif
+*.las
+*.laz
+
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# QGIS
+*.qgs~
+*.qgz~
+*~
+
+# OS
+.DS_Store
+Thumbs.db
