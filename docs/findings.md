@@ -86,3 +86,33 @@ is a better high-water-mark proxy than any assumed buffer width.
 
 Visual inspection confirmed the polygon hugs the wetted channel tightly
 rather than enclosing the braid plain.
+
+## 2026-09-11 — FAS point/polygon mismatch
+
+15 Fishing Access Site points in the study area, 14 polygons. Angler's
+Roost (siteid 39355988) has a point record but no polygon in the FWP
+statewide layer — confirmed absent from the source, not lost in clipping.
+
+Consequence: channel frontage cannot be computed for Angler's Roost the
+way it can for the other 14 sites. Handled as a point-only entry in the
+Phase 4 access model.
+
+Statewide the layer has 337 points and 333 polygons, so the gap is not
+unique to this site.
+
+## 2026-09-11 — FAS boundaries do not reliably touch the mapped channel
+
+Only 9 of 14 FAS polygons intersect the NHDArea channel boundary, yet all
+14 are within 87 m of it, and most within 20 m. Four sites with boat ramps
+(Chief Looking Glass, Poker Joe, Florence Bridge, Wally Crawford) show no
+channel intersection despite being launch points.
+
+Cross-checking against flowlines, most of the non-intersecting sites touch
+a flowline at 0 m — they sit on side channels or reaches upstream of where
+NHD switches from line to polygon representation. Wally Crawford touches
+neither (17 m to channel, 31.8 m to flowline); its boundary appears to
+cover parking and approach rather than the launch itself.
+
+Consequence: the Phase 4 access model snaps FAS sites to the nearest water
+feature within a 100 m tolerance rather than requiring intersection. The
+threshold is set by the observed maximum of 87.2 m.
