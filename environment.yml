@@ -8,4 +8,3 @@ dependencies:
   - geopandas
   - jupyterlab
   - psycopg2
-prefix: C:\Users\dunca\miniforge3\envs\bitterroot
