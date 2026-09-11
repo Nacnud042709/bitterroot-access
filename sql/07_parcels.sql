@@ -28,3 +28,4 @@ CREATE INDEX parcel_owner_idx ON stage.parcel (ownername);
 
 COMMENT ON TABLE stage.parcel IS
   'Ravalli and Missoula county parcels intersecting HUC8 17010205, EPSG:32100. Source: MT Cadastral, published 2026-09-03.';
+  ALTER TABLE stage.parcel ADD COLUMN parcel_uid bigserial PRIMARY KEY;
