@@ -116,3 +116,26 @@ cover parking and approach rather than the launch itself.
 Consequence: the Phase 4 access model snaps FAS sites to the nearest water
 feature within a 100 m tolerance rather than requiring intersection. The
 threshold is set by the observed maximum of 87.2 m.
+
+## 2026-09-11 — Bridge-to-flowline matching threshold
+
+167 NBI structures in the study area. Distance from each to the nearest
+flowline shows a clear break: 141 within 40 m, a sparse tail of 15 between
+40 and 200 m, and 11 beyond 200 m.
+
+Threshold set at 50 m, capturing 143 structures. Justification: NBI records
+coordinates to the nearest second, roughly 30 m at this latitude, so offsets
+under 40 m are within expected positional error. The 24 structures beyond
+50 m are predominantly bridges over irrigation canals and ditches — excluded
+from stage.flowline as ftype 336 — plus one wildlife underpass carrying US 93
+over a game corridor rather than water.
+
+The distance measure therefore doubles as a filter: structures over excluded
+infrastructure sort themselves out without manual classification.
+
+Boulder Creek (structure 010304000000010, USFS): 200 m from the nearest
+flowline of any name, and 955 m from any segment NHD names "Boulder Creek",
+despite 52 Boulder Creek segments in the basin. Either the NBI coordinate is
+wrong or the USFS local name differs from the GNIS name for that drainage.
+Single structure on an upper East Fork tributary; excluded by the 50 m
+matching threshold and not material to the access model.
