@@ -225,3 +225,28 @@ failure mode as the 303.8 km flowline length and the public-land acreage
 exceeding the basin area: a spatial join matching one feature to many, then
 aggregating or keying on the result. The check that catches it is comparing
 row count to distinct count of the entity being modeled.
+---
+## 2026-09-13 — Access data is fragmented by managing program
+
+The FWP Fishing Access Site layer covers state-designated access only. Three
+public boat launches in the upper West Fork — West Fork Boat Launch, Applebury,
+and Haley Chute — are Forest Service developed recreation sites, inventoried in
+the USFS INFRA Rec_Infra_RecSite dataset rather than by FWP. Painted Rocks State
+Park is a third program again.
+
+Four datasets answer one user-facing question: FWP FAS, FWP state parks, USFS
+recreation sites, county parks. A person asking "where can I get on the river"
+has no single source.
+
+**Filter that failed.** Distance to nearest flowline does not separate river
+launches from reservoir launches: NHD runs ArtificialPath lines through
+reservoirs to maintain network connectivity, so Slate Creek Bay on Painted
+Rocks sits 9 m from a flowline while West Fork Boat Launch sits 82 m. Distance
+to the nearest mapped waterbody separates them cleanly — reservoir sites 0-37 m,
+river sites 1,373-3,266 m — so the filter uses that, with a 500 m threshold.
+
+**Attribute filters on federal datasets.** STATES_SPANNED in the USFS layer is
+sparsely populated: filtering on it returned 24 Montana sites, all in the
+Kootenai and Flathead, and none in the Bitterroot. Loading all 31,397 records
+and clipping spatially returned 467 in the study area. The spatial clip is
+authoritative where agency attribute entry is not.

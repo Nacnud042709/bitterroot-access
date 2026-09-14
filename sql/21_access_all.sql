@@ -1,27 +1,37 @@
 -- Unified access layer. Phase 6 traverses the flowline network from these.
 --
--- Three source categories with different geometry:
---   fas      - FWP fishing access sites, snapped to water within 100 m (15)
---   bridge   - NBI structures in public road ROW touching the channel (26)
---   frontage - public land channel frontage, as line geometry (101)
+-- Four source categories with different geometry:
+--   fas       - FWP fishing access sites, snapped to water within 100 m (15)
+--   bridge    - NBI structures in public road ROW touching the channel (26)
+--   usfs_boat - USFS developed boating sites on river channel (3)
+--   frontage  - public land channel frontage, as line geometry (101)
 --
 -- Frontage is stored as lines rather than points because the entire length is
 -- a legal entry. Points and lines are unioned into a single MULTI geometry
 -- column; Phase 6 measures along-channel distance from whichever is nearest.
+--
+-- Access data in Montana is fragmented by managing program rather than by what
+-- a user experiences as access: FWP FAS, FWP state parks, USFS recreation
+-- sites, and county parks are four datasets answering one question. The
+-- usfs_boat category exists because three public launches in the upper West
+-- Fork are Forest Service sites and absent from the FWP FAS layer entirely.
 
 DROP TABLE IF EXISTS model.access_all;
 
 CREATE TABLE model.access_all AS
+
+-- FWP fishing access sites
 SELECT
-    'fas'                         AS access_type,
-    'open'                        AS access_regime,
-    f.name                        AS label,
-    f.siteid::text                AS source_id,
-    ST_Multi(f.geom)              AS geom
+    'fas'                                   AS access_type,
+    'open'                                  AS access_regime,
+    f.name                                  AS label,
+    f.siteid::text                          AS source_id,
+    ST_Multi(f.geom)                        AS geom
 FROM model.access_fas f
 
 UNION ALL
 
+-- Public bridge crossings (HB 190 right-of-way access)
 SELECT
     'bridge',
     'open',
@@ -32,6 +42,18 @@ FROM model.access_bridge b
 
 UNION ALL
 
+-- USFS developed boating sites on river channel
+SELECT
+    'usfs_boat',
+    'open',
+    u.site_name,
+    u.gid::text,
+    ST_Multi(u.geom)
+FROM model.access_usfs u
+
+UNION ALL
+
+-- Public land channel frontage, as line geometry
 SELECT
     'frontage',
     r.access_regime,
@@ -45,4 +67,4 @@ CREATE INDEX access_all_geom_idx ON model.access_all USING GIST (geom);
 CREATE INDEX access_all_type_idx ON model.access_all (access_type, access_regime);
 
 COMMENT ON TABLE model.access_all IS
-  'All modeled legal entry points to the channel. See sql/18-20 for each category.';
+  'All modeled legal entry points to the channel. See sql/18-20, 23 for each category.';
