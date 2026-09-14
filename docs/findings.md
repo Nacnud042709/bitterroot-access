@@ -175,3 +175,53 @@ which parcels this applies to.
 false matches: '%USA%' matches "SUSAN", and '%COUNTY%' matches business names
 like "Ravalli County Bank". Anchoring the patterns reduced the genuine
 disagreement set to 27.
+---
+Access type	km of channel frontage
+Private	369.8
+Parallel road ROW	70.3
+Open public land	85.1
+Restricted (refuge)	18.3
+Licensed (state trust)	16.5
+Municipal	5.3
+Bridge crossings	4.45
+---
+## 2026-09-13 — Access point model
+
+142 modeled legal entry points:
+
+| Type | Regime | Count | Extent |
+|---|---|---|---|
+| frontage | open | 78 | 85.0 km |
+| frontage | restricted | 18 | 18.3 km |
+| frontage | licensed | 5 | 16.5 km |
+| bridge | open | 26 | 4.45 km |
+| fas | open | 15 | points |
+
+**FAS snapping.** All 15 sites snapped within 48.7 m once order-3+ flowlines
+were included alongside the channel polygon — lower than the 87.2 m observed
+against the polygon alone. The 100 m tolerance is conservative; 50 m would
+suffice.
+
+**Bridge crossings.** 26 NBI structures within a public road ROW parcel
+touching the channel. All owner codes are 01 (state), 02 (county), or 64
+(USFS) — no private structures, confirming the NBI approach succeeded where
+the MSDI road layer could not. One wildlife underpass on US 93 was excluded by
+feature description: it sat 9.5 m from a flowline because a small drainage runs
+through the same structure, so the distance threshold alone did not catch it.
+
+**Frontage by agency (open regime).** USFS 71.5 km across 54 parcels, FWP
+11.7 km across 21. The USFS mileage is concentrated on the upper forks; FWP's
+is distributed down the valley. Distribution matters more than extent for
+practical access.
+
+**Known under-count.** Municipal frontage (5.3 km) is excluded because the
+class mixes parks with shop yards and treatment plants. Resolving it requires
+parcel-level review.
+
+**Duplicate-row error, third occurrence.** The bridge join returned 47 rows for
+27 bridges, because a crossing typically sits where several ROW parcels meet.
+Fixed with a lateral join taking the nearest parcel only. This is the same
+failure mode as the 303.8 km flowline length and the public-land acreage
+exceeding the basin area: a spatial join matching one feature to many, then
+aggregating or keying on the result. The check that catches it is comparing
+row count to distinct count of the entity being modeled.
