@@ -250,3 +250,73 @@ sparsely populated: filtering on it returned 24 Montana sites, all in the
 Kootenai and Flathead, and none in the Bitterroot. Loading all 31,397 records
 and clipping spatially returned 467 in the study area. The spatial clip is
 authoritative where agency attribute entry is not.
+---
+---
+
+## 2026-09-13 — Channel segmentation
+
+1,297 segments, 596.0 km of channel margin attributed to parcel ownership.
+
+**Outer bank vs island shoreline.** ST_Boundary returns interior rings, so
+island shorelines were initially bundled with bank. Split out: 525.5 km outer
+bank, 70.5 km island. The distinction is legal as well as geometric — wading a
+side channel past an island is permitted under the stream access law, but the
+vegetated island above the high-water mark is private property, typically held
+by the adjacent landowner. ring_type flags each segment so both figures remain
+available and the choice stays explicit downstream.
+
+**Ownership, outer bank only:**
+
+| Regime | km | % |
+|---|---|---|
+| private | 324.1 | 62% |
+| road ROW | 90.0 | 17% |
+| open public | 82.7 | 16% |
+| restricted | 13.4 | 3% |
+| licensed | 11.6 | 2% |
+| municipal | 4.0 | 1% |
+
+Open public land fronts 82.7 km of outer bank but only 2.4 km of island —
+Forest Service holdings sit in the canyons where the river does not braid.
+
+**Extent error, caught by a 19 km discrepancy.** The segmented total came up
+~18 km short of the measured channel boundary. Chasing it showed 19.2 km of
+boundary with no underlying parcel, all in one stretch at the north end near
+the Clark Fork confluence — and outside the study area entirely.
+
+Cause: sql/06_nhdarea.sql selected channel polygons with ST_Intersects and kept
+them whole, so the polygon at the north end brought its overhang past the HUC8
+line with it. Channel perimeter was 614.2 km unclipped against 594.6 km clipped.
+
+Fixed by clipping the geometry with ST_Intersection rather than merely selecting
+by intersection. Segment totals changed by 0.3 km, since the orphan stretch was
+never being segmented anyway — what changed is that the accounting now closes
+without an unexplained remainder.
+
+Note the treatment differs by layer deliberately: parcels and public land are
+kept whole on intersection, because a parcel straddling the boundary is still
+one parcel. The channel is clipped, because its length is being measured.
+
+**ST_DumpRings gotcha.** It returns each ring as a closed POLYGON, not a
+LINESTRING. Without ST_ExteriorRing to convert, ST_Intersection against a parcel
+returns an area and ST_Length returns 0 — so the 5 m minimum-length filter
+dropped every row. The script reported DROP TABLE / SELECT 0 / CREATE INDEX and
+exited cleanly with an empty table. A clean exit with zero rows is a failure,
+not a result.
+
+**Reconciliation:**
+
+| | km |
+|---|---|
+| Channel boundary, clipped to study area | 594.6 |
+| Segmented (outer 525.5 + island 70.5) | 596.0 |
+
+The 1.4 km overage is rounding across 1,297 segments plus boundary-crossing
+effects at the 5 m filter.
+---
+**Edge effect at the downstream boundary.** The ten least-accessible mainstem
+reaches are all in the final 8 km above the Clark Fork confluence, classified
+remote at 6.8-8.8 km from the nearest open entry. The nearest is Chief Looking
+Glass, 5.4 km straight-line and 8.8 km along channel. Access downstream of the
+HUC8 boundary is invisible to the model, so accessibility on the lowest reaches
+is understated. Reaches near any study area boundary carry this limitation.
