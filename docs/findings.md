@@ -139,3 +139,39 @@ despite 52 Boulder Creek segments in the basin. Either the NBI coordinate is
 wrong or the USFS local name differs from the GNIS name for that drainage.
 Single structure on an upper East Fork tributary; excluded by the 50 m
 matching threshold and not material to the access model.
+
+---
+## 2026-09-13 — Ownership classification
+
+50,957 parcels classified into three classes:
+
+| Class | Method | Parcels | Acres |
+|---|---|---|---|
+| private | spatial | 42,894 | 445,290 |
+| public | spatial | 3,416 | 1,385,212 |
+| public | name_pattern | 27 | 164 |
+| row | no_owner_attribution | 4,620 | 12,887 |
+
+**Rights-of-way.** 4,620 parcels carry no owner, parcel id, or property type.
+Shape index 11.6 (compact blocks would be ~4) and visual inspection confirm
+these are the municipal street grid and rural section-line roads. Relevant to
+Phase 4: HB 190 grants public water access at county road right-of-way, and
+130 of 167 NBI bridges fall within 50 m of one of these parcels.
+
+**Spatial threshold.** Public-land coverage per parcel is strongly bimodal:
+3,893 parcels below 10%, 3,425 above 90%, 113 between. Threshold set at 50%,
+which sits in the empty middle. Where parcels are entirely within public land
+the two layers agree on area to within 0.1 m², indicating the cadastral and
+MSDI boundaries were derived consistently.
+
+**Name-pattern supplement.** 27 parcels (164 acres) have governmental owner
+names but little or no public-land coverage — all small municipal and county
+holdings. MSDI maps federal ownership thoroughly and local government
+spottily. These are classified public by name rule; the method column records
+which parcels this applies to.
+
+**Validation error worth recording.** The first cross-check used ILIKE
+'%USA%' and '%COUNTY%' and returned 405 apparent disagreements. Most were
+false matches: '%USA%' matches "SUSAN", and '%COUNTY%' matches business names
+like "Ravalli County Bank". Anchoring the patterns reduced the genuine
+disagreement set to 27.
